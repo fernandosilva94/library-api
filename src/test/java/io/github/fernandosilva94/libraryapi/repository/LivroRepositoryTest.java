@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -50,5 +51,38 @@ class LivroRepositoryTest {
         livroAtt.setAutor(autorAtt);
 
         livroRepository.save(livroAtt);
+    }
+    @Test
+    void listarLivrosAutor() {
+        var id = UUID.fromString("ec2d3648-a3e5-44b9-81e7-ce32f6eb07a0");
+        var autor = autorRepository.findById(id).get();
+
+        List<Livro> livrosLista =  livroRepository.findByAutor(autor);
+        autor.setLivros(livrosLista);
+        autor.getLivros().forEach(System.out::println);
+    }
+
+    @Test
+    void listarLivrosComQueryJPQL() {
+        var resultado = livroRepository.listarTodosOrdenadosPorTituloAndPreco();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarGeneroLivroAutoresBrasileiro() {
+        var resultado = livroRepository.listarGeneroAutoresBrasileiros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarLivroPorGenero() {
+        var resultado = livroRepository.findByGenero(GeneroLivro.FICCAO);
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listarLivroPorGeneroPosicaoParametro() {
+        var resultado = livroRepository.findByGeneroPosicaoParametro(GeneroLivro.FICCAO, "preco");
+        resultado.forEach(System.out::println);
     }
 }
